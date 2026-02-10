@@ -105,14 +105,24 @@ void MyArray::selectionSortRecursion(int left)
 {
     // your code goes here
     // base case
-    if (left >= n-1)
+    if (left >= n-1) // at most 1 element in current sublist
         return;
-    // recursive case:
-    // 1. Scanning
+
+    // recursive case: // current sublist contains more than 1 element
+    // 1. Scanning: A[left] to A[n-1] to find smallest element
+    int idxMin = left; // initial guess
+    for (int i = left + 1; i <= n-1; i++){
+        if (A[i] < A[idxMin]) // a smaller element has been found
+            idxMin = i;
+    }
 
     // 2. swap smallest with beginning element of current sublist
+    int t = A[left];
+    A[left] = A[idxMin];
+    A[idxMin] = t;
 
     // 3. sort A[left+1] ~ A[n-1]
+    selectionSortRecursion(left+1);
 }
 
 /**
@@ -153,6 +163,27 @@ void MyArray::bubbleSort()
 void MyArray::bubbleSortRecursion(int right)
 {
     // your code goes here
+    // base case: sublist currently contains at most 1 element
+    if (right <= 0)
+        return;
+    
+    // recursive case: current sublist contains at least 2 elements
+    bool swapped = false;
+
+    // 1. compare neighbors and do swaps if needed
+    for (int i = 0; i < right; i++){
+        if (A[i] > A[i+1]){
+            int t = A[i];
+            A[i] = A[i+1];
+            A[i+1] = t;
+            swapped = true;
+        }
+    }
+    if (!swapped) // list had no swaps; already sorted
+        return;
+
+    // 2. sort A[0] to A[right-1]
+    bubbleSortRecursion(right-1);
 }
 
 /**
@@ -186,6 +217,24 @@ void MyArray::insertionSort()
 void MyArray::insertionSortRecursion(int right)
 {
     // your code goes here
+    // base case: sublist contains at most 1 element
+    if (right <= 0)
+        return;
+
+    // recursive case: sublist contains at least 2 elements
+    // 1. sort A[0] to A[right-1]
+    insertionSortRecursion(right-1);
+
+    // 2. insert A[right] into sorted sublist A[0] to A[right-1]
+    int t = A[right];
+    int i;
+    for (i = right-1; i >= 0; i--){
+        if (t < A[i])
+            A[i+1] = A[i];
+        else
+            break;
+    }
+    A[i+1] = t;
 }
 
 void MyArray::sort()
