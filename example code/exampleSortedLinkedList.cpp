@@ -43,7 +43,9 @@ public:
 // construct an empty list
 SortedLinkedList::SortedLinkedList()
 {
-	// your code goes here       
+	// your code goes here  
+	head = nullptr; // no node in list
+
 }
 
 // deconstruct the list 
@@ -55,7 +57,12 @@ SortedLinkedList::~SortedLinkedList()
 // traverse the list and display the key and data of each node
 void SortedLinkedList::traverse()
 {
-	// your code goes here       
+	// your code goes here
+	Node* current = head;
+	while(current != nullptr){
+		cout << current->key << "|" << current->data << endl; // access content of current
+		current = current->next; // move to next node
+	}
 }
 
 // insert a node (k,d) into the list
