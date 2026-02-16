@@ -78,6 +78,7 @@ void MyArray::display()
  */
 void MyArray::selectionSort()
 {
+    /*
     for (int i = 0; i < n-1; i ++)        
     {   
         // consider sublist a[i] ~ a[n-1]:
@@ -93,6 +94,23 @@ void MyArray::selectionSort()
         int t = A[i];
         A[i] = A[idxMin];
         A[idxMin] = t;
+    }
+        */
+    for (int i = size; i > n; i--)        
+    {   
+        // consider sublist a[size] down to a[n]:
+        // find the largest in the sublist and then swap it with last element in subarray (A[i])
+        int idxMax = i;                     // idxMax: index of the maximum element in the sublist
+        for (int j = i + 1; j < n; j ++)
+        {
+            if (A[j] < A[idxMax])           // a smaller element, a[j], is found
+                idxMax = j;
+        }
+        
+        // swap a[i] with a[idxMin]
+        int t = A[i];
+        A[i] = A[idxMax];
+        A[idxMax] = t;
     }
 }
 
