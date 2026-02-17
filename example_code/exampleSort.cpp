@@ -78,36 +78,18 @@ void MyArray::display()
  */
 void MyArray::selectionSort()
 {
-    /*
-    for (int i = 0; i < n-1; i ++)        
+    for (int i = n-1; i >= 0; i--)        
     {   
-        // consider sublist a[i] ~ a[n-1]:
-        // find the smallest in the sublist and then swap it with a[i]
-        int idxMin = i;                     // idxMin: index of the minimum element in the sublist
-        for (int j = i + 1; j < n; j ++)
-        {
-            if (A[j] < A[idxMin])           // a smaller element, a[j], is found
-                idxMin = j;
-        }
-        
-        // swap a[i] with a[idxMin]
-        int t = A[i];
-        A[i] = A[idxMin];
-        A[idxMin] = t;
-    }
-        */
-    for (int i = size; i > n; i--)        
-    {   
-        // consider sublist a[size] down to a[n]:
+        // consider sublist a[i] down to a[n]:
         // find the largest in the sublist and then swap it with last element in subarray (A[i])
         int idxMax = i;                     // idxMax: index of the maximum element in the sublist
-        for (int j = i + 1; j < n; j ++)
+        for (int j = i-1; j >= 0; j--)
         {
-            if (A[j] < A[idxMax])           // a smaller element, a[j], is found
+            if (A[j] > A[idxMax])           // a larger element, a[j], is found
                 idxMax = j;
         }
         
-        // swap a[i] with a[idxMin]
+        // swap a[i] with a[idxMax]
         int t = A[i];
         A[i] = A[idxMax];
         A[idxMax] = t;
@@ -121,7 +103,7 @@ void MyArray::selectionSort()
  */
 void MyArray::selectionSortRecursion(int left)
 {
-    // your code goes here
+    /*
     // base case
     if (left >= n-1) // at most 1 element in current sublist
         return;
@@ -141,6 +123,28 @@ void MyArray::selectionSortRecursion(int left)
 
     // 3. sort A[left+1] ~ A[n-1]
     selectionSortRecursion(left+1);
+    */
+   // base case
+    if (left >= n-1) // at most 1 element in current sublist
+        return;
+
+    // recursive case: // current sublist contains more than 1 element
+    // 1. Scanning: A[left] to A[n-1] to find largest element
+    int idxMax = left; // initial guess
+    for (int i = left + 1; i <= n-1; i++){
+        if (A[i] > A[idxMax]) // a larger element has been found
+            idxMax = i;
+    }
+
+    // 2. swap largest with beginning element of current sublist
+    int t = A[left];
+    A[left] = A[idxMax];
+    A[idxMax] = t;
+
+    // 3. sort A[left+1] ~ A[n-1]
+    selectionSortRecursion(left+1);
+
+
 }
 
 /**
@@ -270,7 +274,7 @@ void MyArray::sort()
     {
         case 1:
             // selectionSort();
-            selectionSortRecursion(0);
+            selectionSort();
             break;
         case 2:
             // bubbleSort();
