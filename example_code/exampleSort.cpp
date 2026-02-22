@@ -101,50 +101,25 @@ void MyArray::selectionSort()
  * Use selection sort algorithm to sort elements a[left] ~ a[n-1] in non-decreasing order
  * Recursive approach 
  */
-void MyArray::selectionSortRecursion(int left)
+void MyArray::selectionSortRecursion(int right)
 {
-    /*
-    // base case
-    if (left >= n-1) // at most 1 element in current sublist
-        return;
-
-    // recursive case: // current sublist contains more than 1 element
-    // 1. Scanning: A[left] to A[n-1] to find smallest element
-    int idxMin = left; // initial guess
-    for (int i = left + 1; i <= n-1; i++){
-        if (A[i] < A[idxMin]) // a smaller element has been found
-            idxMin = i;
-    }
-
-    // 2. swap smallest with beginning element of current sublist
-    int t = A[left];
-    A[left] = A[idxMin];
-    A[idxMin] = t;
-
-    // 3. sort A[left+1] ~ A[n-1]
-    selectionSortRecursion(left+1);
-    */
    // base case
-    if (left >= n-1) // at most 1 element in current sublist
+    if (right <= 1) // at most 1 element in current sublist
         return;
 
-    // recursive case: // current sublist contains more than 1 element
-    // 1. Scanning: A[left] to A[n-1] to find largest element
-    int idxMax = left; // initial guess
-    for (int i = left + 1; i <= n-1; i++){
+    // recursive case: current sublist contains more than 1 element
+    // 1. Scanning: A[right] to A[0] to find largest element
+    int idxMax = right; // initial guess
+    for (int i = right - 1; i >= 0; i--){
         if (A[i] > A[idxMax]) // a larger element has been found
             idxMax = i;
     }
-
-    // 2. swap largest with beginning element of current sublist
-    int t = A[left];
-    A[left] = A[idxMax];
+    // 2. swap largest with ending element of current sublist
+    int t = A[right];
+    A[right] = A[idxMax];
     A[idxMax] = t;
-
     // 3. sort A[left+1] ~ A[n-1]
-    selectionSortRecursion(left+1);
-
-
+    selectionSortRecursion(right-1);
 }
 
 /**
@@ -156,19 +131,20 @@ void MyArray::bubbleSort()
 {
     bool swapped = false;                // false: no swap happened during the current round
         
-    for (int i = n - 1; i > 1; i --)             
+    for (int i = 0; i < n; i++)             
     {   
-        // move the largest among a[0] ~ a[i] into a[i] by swapping between neighbors if needed
-        for (int j = 0; j < i; j++)         // swap A[j] and A[j+1], if necessary
+        // move the smallest among a[n-1] ~ a[i] into a[i] by swapping between neighbors if needed
+        for (int j = n-1; j > i; j--)         
         {
-            if (A[j] > A[j + 1])
+            if (A[j] < A[j-1]) // swap A[j] and A[j-1], if necessary
             {
                 int t = A[j];
-                A[j] = A[j + 1];
-                A[j + 1] = t;
+                A[j] = A[j-1];
+                A[j-1] = t;
                 swapped = true;
             }
         }
+        this->display();
         
         if (!swapped)                       // no swap happened --> already sorted
             break;
@@ -182,30 +158,28 @@ void MyArray::bubbleSort()
  * Use bubble sort algorithm to sort elements a[0] ~ a[right] in non-decreasing order
  * Recursive approach
  */
-void MyArray::bubbleSortRecursion(int right)
+void MyArray::bubbleSortRecursion(int left)
 {
-    // your code goes here
     // base case: sublist currently contains at most 1 element
-    if (right <= 0)
+    if (left >= n-1) // if left index is at the end of the list, finish recursion
         return;
-    
+
     // recursive case: current sublist contains at least 2 elements
     bool swapped = false;
-
     // 1. compare neighbors and do swaps if needed
-    for (int i = 0; i < right; i++){
-        if (A[i] > A[i+1]){
+    for (int i = n-1; i > left; i--){ // iterate down the list from the end to the left index
+        if (A[i] < A[i-1]){ // if the current element being looked at is less than element before it,
             int t = A[i];
-            A[i] = A[i+1];
-            A[i+1] = t;
+            A[i] = A[i-1];
+            A[i-1] = t; // swap current element with the one before it
             swapped = true;
         }
     }
     if (!swapped) // list had no swaps; already sorted
         return;
 
-    // 2. sort A[0] to A[right-1]
-    bubbleSortRecursion(right-1);
+    // 2. sort A[left+1] to A[n-1]; 
+    bubbleSortRecursion(left+1);
 }
 
 /**
@@ -215,7 +189,7 @@ void MyArray::bubbleSortRecursion(int right)
  */
 void MyArray::insertionSort()
 {
-    for (int i=1; i < n; i++)           
+    for (int i=n-1; i>0; i--)           
     {   
         // insert a[i] into a[0] ~ a[i-1] so that a[0] ~ a[i] become sorted
         int t = A[i];
@@ -227,7 +201,7 @@ void MyArray::insertionSort()
             else
                 break;
         }
-        A[j + 1] = t;
+        A[j - 1] = t;
     }
 }
 
@@ -236,27 +210,28 @@ void MyArray::insertionSort()
  * Use insertion sort algorithm to sort elements a[0] ~ a[right] into non-decreasing order
  * Recursive approach
  */
-void MyArray::insertionSortRecursion(int right)
+void MyArray::insertionSortRecursion(int left)
 {
-    // your code goes here
     // base case: sublist contains at most 1 element
-    if (right <= 0)
+    if (left <= 0)
         return;
 
     // recursive case: sublist contains at least 2 elements
-    // 1. sort A[0] to A[right-1]
-    insertionSortRecursion(right-1);
+    // 1. sort A[left+1] to A[n-1]
+    insertionSortRecursion(left+1);
 
     // 2. insert A[right] into sorted sublist A[0] to A[right-1]
-    int t = A[right];
+    int t = A[left];
     int i;
-    for (i = right-1; i >= 0; i--){
+    for (i = left+1; i <= n-1; i++){
         if (t < A[i])
             A[i+1] = A[i];
         else
             break;
     }
     A[i+1] = t;
+
+
 }
 
 void MyArray::sort()
@@ -274,15 +249,15 @@ void MyArray::sort()
     {
         case 1:
             // selectionSort();
-            selectionSort();
+            selectionSortRecursion(n-1);
             break;
         case 2:
-            // bubbleSort();
-            bubbleSortRecursion(n-1);
+            //bubbleSort();
+            bubbleSortRecursion(0);
             break;
         case 3:
             // insertionSort();
-            insertionSortRecursion(n-1);
+            insertionSortRecursion(0);
             break;
         case 0:
             break;
